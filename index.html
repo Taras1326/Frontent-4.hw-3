@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>hw-3</title>
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+
+    <h1 class="page-title">Домашнє завдання JS</h1>
+
+<p id="image-counter">Завантажено: 0 / 5</p>
+
+<div class="top-buttons">
+  <button id="load-images-btn" class="btn-shiny">Завантажити зображення</button>
+  <button id="reset-gallery" class="btn-shiny">Скинути галерею</button>
+</div>
+
+<div class="image-gallery">
+  <div class="image-wrapper"><div class="spinner"></div><img data-src="https://picsum.photos/id/1018/600/400.webp" class="lazy-img" /></div>
+  <div class="image-wrapper"><div class="spinner"></div><img data-src="https://picsum.photos/id/1024/600/400.webp" class="lazy-img" /></div>
+  <div class="image-wrapper"><div class="spinner"></div><img data-src="https://picsum.photos/id/1035/600/400.webp" class="lazy-img" /></div>
+  <div class="image-wrapper"><div class="spinner"></div><img data-src="https://picsum.photos/id/1041/600/400.webp" class="lazy-img" /></div>
+  <div class="image-wrapper"><div class="spinner"></div><img data-src="https://picsum.photos/id/1049/600/400.webp" class="lazy-img" /></div>
+</div>
+
+<div id="slider" class="slider hidden">
+  <button class="slider-btn prev">&larr;</button>
+  <img id="slider-img" src="" alt="slider" />
+  <button class="slider-btn next">&rarr;</button>
+</div>
+    
+    <div id="fireworks-container"></div>
+
+
+    <script type="module" src="./js/homework-3.js"></script>
+</body>
+</html>

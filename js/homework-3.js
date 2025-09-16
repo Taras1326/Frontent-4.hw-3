@@ -1,5 +1,4 @@
 const images = document.querySelectorAll("img[data-src]");
-const loadBtn = document.getElementById("load-images-btn");
 const resetBtn = document.getElementById("reset-gallery");
 const imageCounter = document.getElementById("image-counter");
 
@@ -10,10 +9,10 @@ const nextBtn = document.querySelector(".slider-btn.next");
 
 let loadedCount = 0;
 let currentIndex = 0;
-let autoSlideInterval;
+let autoSlideInterval = null;
 
 function updateCounter() {
-  imageCounter.textContent = `Завантажено: ${loadedCount} / ${images.length} `;
+  imageCounter.textContent = `Завантажено: ${loadedCount} / ${images.length}`;
 }
 
 function hideSpinner(img) {
@@ -54,27 +53,41 @@ function stopAutoSlider() {
   clearInterval(autoSlideInterval);
 }
 
-function loadImages() {
-  loadedCount = 0;
-  images.forEach((img, index) => {
-    img.classList.remove("loaded");
-    hideSpinner(img);
-    img.src = "";
-    setTimeout(() => {
-      img.src = img.dataset.src;
-      img.onload = () => {
-        img.classList.add("loaded");
-        hideSpinner(img);
-        loadedCount++;
-        updateCounter();
-        if (loadedCount === images.length) {
-          showSlider();
-          localStorage.setItem("imagesLoaded", "true");
-        }
-      };
-    }, index * 500);
-  });
-}
+const observer = new IntersectionObserver(
+  (entries, observer) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+
+      const img = entry.target;
+      const dataSrc = img.dataset.src;
+
+      if (dataSrc) {
+        img.src = dataSrc;
+
+        img.onload = () => {
+          img.classList.add("loaded");
+          hideSpinner(img);
+          loadedCount++;
+          updateCounter();
+
+          if (loadedCount === images.length) {
+            showSlider();
+            localStorage.setItem("imagesLoaded", "true");
+          }
+        };
+      }
+
+      observer.unobserve(img);
+    });
+  },
+  {
+    threshold: 0.1,
+  }
+);
+
+images.forEach((img) => {
+  observer.observe(img);
+});
 
 if (localStorage.getItem("imagesLoaded") === "true") {
   images.forEach((img) => {
@@ -100,6 +113,8 @@ resetBtn.addEventListener("click", () => {
     img.classList.remove("loaded");
     const spinner = img.closest(".image-wrapper").querySelector(".spinner");
     if (spinner) spinner.style.display = "block";
+
+    observer.observe(img);
   });
 
   slider.classList.add("hidden");
@@ -107,4 +122,3 @@ resetBtn.addEventListener("click", () => {
   updateCounter();
 });
 
-loadBtn.addEventListener("click", loadImages);
